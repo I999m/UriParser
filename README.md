@@ -8,11 +8,22 @@ I don't know but, couldn't parse URI, so i made it.
 ## exmaple
 
 ```
-const parsed_uri = new UriPaser("https://example.com").parse();
+const uri = "https://example.com/?key=value&type=script";
 
-console.log(parsed_uri);
+const parse = new UriPaser(uri).parse();
 
-// { protocol: "https", host: "example.com", path: "/" }
+console.log(parse)
+
+
+///////////////////////////////////////////////////////////
+//
+// Uri {
+//     host: "example.com",
+//     protocol: "https",
+//     path: "/?key=value&type=script",
+//     queryString: { key: "value", type: "script" }
+//   }
+
 
 ```
 ## support
@@ -20,7 +31,7 @@ console.log(parsed_uri);
 - [x] protocol
 - [x] host
 - [x] path
-- [ ] param
+- [x] queryString
 
 ## some
 
