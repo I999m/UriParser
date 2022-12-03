@@ -13,81 +13,51 @@ export class Uri{
   }
 }
 
-export class UriPaser{
-    private uriString:string
-    private uri:Uri
 
-    private constructorIsNullOrEmptyOrUndefined(){
-      this.uri = new Uri();
-    }
+export function UriParser(_uri:string): Uri{
+
+  const ParsedUri = new Uri;
   
-    constructor(_uri:string){
+  if(_uri === "") return ParsedUri;
+  if(_uri === null) return ParsedUri;
+  if(_uri === undefined) return ParsedUri;
 
-      if(_uri === "") this.constructorIsNullOrEmptyOrUndefined();
-      if(_uri === null) this.constructorIsNullOrEmptyOrUndefined();
-      if(_uri === undefined) this.constructorIsNullOrEmptyOrUndefined();
 
+  const getWithoutQueryString = () =>{
+    const not_QueryString = getQueryString[0];
+
+    const scheme_domain_path = not_QueryString.split("://");
     
-      // https://example.com/?key=value
+    const domain_path = scheme_domain_path[scheme_domain_path.length - 1].split("/");
 
-      //" https "を取得
-      const _protocol = _uri.match("^[ -~]*(://)")?.[0]!.replace("://","")!;
-      //uriStringに " example.com/ "を入れる
-      this.uriString = _uri.replace(_uri.match("^[ -~]*(://)")?.[0]!,"");
-      //" exmaple.com "を取得
-      const _host = this.toArray()[0];
-      //" / "を取得
-      const _path = this.getPathToString();
-      //" ?key=valu "をクエリストリングとして取得
-      const _queryString = this.getQueryString();
-
-
-      this.uri = new Uri(_host, _protocol, _path, _queryString);
-
-
-
-
-    }
-
-
-    public parse():Uri{
-      return this.uri;
-    }
-
-    private toArray(): string[]{
-      return this.uriString.split("/");
-    }
-    private getPathToString(): string{
-  
-      var _uri = this.toArray();
-      
-      //Remove host
-      // example.com/main
-      //  ↓
-      // main
-      _uri.splice(0,1)
-  
-      const joind_uri = `${_uri.join("/")}`;
-      
-      return joind_uri.slice(-1) === "/" ? `/${joind_uri.slice(0,-1)}` : `/${joind_uri}`;
-      
-    }
+    ParsedUri.host = domain_path[0];
     
-    private getQueryString(): {[key:string]: string}{
+    domain_path.splice(0,1)
 
-      const querymap: {[key:string]: string} = {};
+  
+    ParsedUri.path = `/${domain_path.join("/")}`;
 
-      const queryList_string = this.uriString.split("?")[1];
-      const queryList = queryList_string.split("&");
+    ParsedUri.protocol = scheme_domain_path[0];
+  }
 
-      queryList.forEach( query => {
+  const getQueryString = _uri.split("?");
+  if(getQueryString.length > 1){
+    //QueryStringあり
+
+    getWithoutQueryString();
+
+    const queryList = getQueryString[getQueryString.length -1].split("&");
+          queryList.forEach( query => {
           const key_value = query.split("=");
-          querymap[key_value[0]] = key_value[1];
+          ParsedUri.queryString[key_value[0]] = key_value[1];
       });
 
-      return querymap;
 
+  } else{
+    //QueryStringなし
+    getWithoutQueryString();
 
-
-    }
   }
+
+  return ParsedUri;
+}

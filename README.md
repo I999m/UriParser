@@ -8,21 +8,21 @@ I don't know but, couldn't parse URI, so i made it.
 ## exmaple
 
 ```
-const uri = "https://example.com/?key=value&type=script";
+const uri = "https://example.com/script/type?key=value&type=script";
 
-const parse = new UriPaser(uri).parse();
+const parse = UriParser(uri);
 
 console.log(parse)
 
 
 ///////////////////////////////////////////////////////////
 //
-// Uri {
-//     host: "example.com",
-//     protocol: "https",
-//     path: "/?key=value&type=script",
-//     queryString: { key: "value", type: "script" }
-//   }
+//  Uri {
+//      host: "example.com",
+//      protocol: "https",
+//      path: "/script/type",
+//      queryString: { key: "value", type: "script" }
+//  }
 
 
 ```
