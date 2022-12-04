@@ -23,7 +23,7 @@ export function UriParser(_uri:string): Uri{
   if(_uri === undefined) return ParsedUri;
 
 
-  const getWithoutQueryString = () =>{
+  const getWithoutQueryString = (getQueryString: string[]) =>{
     const not_QueryString = getQueryString[0];
 
     const scheme_domain_path = not_QueryString.split("://");
@@ -32,8 +32,10 @@ export function UriParser(_uri:string): Uri{
 
     ParsedUri.host = domain_path[0];
     
+    //domainを削除
+    // ["domain", "path"].splice(0,1);
+    // ["path"]
     domain_path.splice(0,1)
-
   
     ParsedUri.path = `/${domain_path.join("/")}`;
 
@@ -44,7 +46,7 @@ export function UriParser(_uri:string): Uri{
   if(getQueryString.length > 1){
     //QueryStringあり
 
-    getWithoutQueryString();
+    getWithoutQueryString(getQueryString);
 
     const queryList = getQueryString[getQueryString.length -1].split("&");
           queryList.forEach( query => {
@@ -55,7 +57,7 @@ export function UriParser(_uri:string): Uri{
 
   } else{
     //QueryStringなし
-    getWithoutQueryString();
+    getWithoutQueryString(getQueryString);
 
   }
 
